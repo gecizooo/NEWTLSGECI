@@ -1,0 +1,115 @@
+{
+  "profile": "hybrid",
+  "groups": {
+    "offered": [
+      "X25519MLKEM768",
+      "X25519",
+      "SecP256r1"
+    ],
+    "require_pq": true,
+    "allow_pure_pq": false,
+    "key_share_budget_bytes": 1400,
+    "send_grease_share": true
+  },
+  "auth": {
+    "schemes": [
+      "ML-DSA-65",
+      "ECDSA-P256",
+      "Ed25519"
+    ],
+    "require_pq_signature": false,
+    "allow_composite": true,
+    "min_chain_bits": 112
+  },
+  "early_data": {
+    "mode": "committed",
+    "max_lifetime": "10s",
+    "max_clock_skew": "2s",
+    "allow_legacy": false,
+    "idempotent_only": true,
+    "require_commit": true
+  },
+  "replay": {
+    "ownership": "consistent_hash",
+    "filter": "exact",
+    "window": "15s",
+    "shard_count": 64,
+    "bits_per_entry": 12,
+    "fail_mode": "closed",
+    "bind_to_address": false,
+    "address_prefix_v4": 24,
+    "address_prefix_v6": 56
+  },
+  "commit": {
+    "store": "spanner://txn/earlydata",
+    "linearizable": true,
+    "ttl": "60s",
+    "commit_point": "on_send",
+    "key_format": "hkdf(client_id||ticket_nonce||commit_token)",
+    "on_conflict": "replay_response"
+  },
+  "ech": {
+    "enabled": true,
+    "public_name": "cdn.example.net",
+    "min_anonymity_set": 64,
+    "key_ttl": "24h",
+    "retry_grace": "2h",
+    "blind_psk_identity": true,
+    "grease_fraction": 0.1,
+    "allow_plaintext_fallback": false,
+    "max_retries": 1,
+    "keys": [
+      {
+        "config_id": 7,
+        "public_name": "cdn.example.net",
+        "kem": "X25519HkdfSha256",
+        "kdf": "HkdfSha256",
+        "aead": "Aes128Gcm",
+        "private_key_handle": "hsm://ech/2026-10-29/7",
+        "not_before": "2026-10-29T00:00:00Z",
+        "not_after": "2026-10-30T00:00:00Z",
+        "max_name_length": 64
+      },
+      {
+        "config_id": 8,
+        "public_name": "cdn.example.net",
+        "kem": "X25519HkdfSha256",
+        "kdf": "HkdfSha256",
+        "aead": "Aes128Gcm",
+        "private_key_handle": "hsm://ech/2026-10-29/8",
+        "not_before": "2026-10-29T12:00:00Z",
+        "not_after": "2026-10-30T12:00:00Z",
+        "max_name_length": 64
+      }
+    ]
+  },
+  "padding": {
+    "classes": [
+      1400,
+      2816,
+      4224,
+      7040
+    ],
+    "pad_certificate": true,
+    "certificate_class": 4224
+  },
+  "verify": {
+    "lemmas": [
+      "P1",
+      "P2",
+      "P3",
+      "P4",
+      "P5",
+      "P6",
+      "P7",
+      "P8",
+      "P9",
+      "P10"
+    ],
+    "tamarin_path": "formal/tamarin/tls13_pq_replay.spthy",
+    "proverif_path": "formal/proverif/ech_sni.pv",
+    "tla_path": "formal/tla/EarlyData.tla",
+    "fail_on_proof_failure": true,
+    "model_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  }
+}

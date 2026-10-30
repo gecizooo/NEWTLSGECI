@@ -1,0 +1,17 @@
+[project]
+name = "tls13pq"
+version = "0.1.0"
+description = "Reference model for TLS 1.3 with hybrid PQC, replay-safe 0-RTT, and hardened ECH"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+tls13pq = "tls13pq.__main__:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["tls13pq*"]
